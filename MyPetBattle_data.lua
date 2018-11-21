@@ -23,7 +23,7 @@ function MyPetBattle.buff(auraName,petIndex)
 	if numAuras == nil then return false end -- Return false if nil, e.g. when NOT in battle
 
 	-- Checking front pet buffs
-	for auraIndex = 1,numAuras do 
+	for auraIndex = 1,numAuras do
 		local auraID, instanceID, turnsRemaining, isBuff = C_PetBattles.GetAuraInfo(LE_BATTLE_PET_ALLY, petIndex, auraIndex)
 		local id, name, icon, maxCooldown, unparsedDescription, numTurns, petType, noStrongWeakHints = C_PetBattles.GetAbilityInfoByID(auraID)
 		if name == auraName then  return true,turnsRemaining end
@@ -36,7 +36,7 @@ function MyPetBattle.buff(auraName,petIndex)
 		local id, name, icon, maxCooldown, unparsedDescription, numTurns, petType, noStrongWeakHints = C_PetBattles.GetAbilityInfoByID(auraID)
 		if name == auraName then  return true,turnsRemaining end
 	end
-	
+
 	return false
 end
 
@@ -47,7 +47,7 @@ function MyPetBattle.debuff(auraName,petIndex)
 	if numAuras == nil then return false end -- Return false if nil, e.g. when NOT in battle
 
 	-- Checking front pet buffs
-	for auraIndex=1,numAuras do 
+	for auraIndex=1,numAuras do
 		local auraID, instanceID, turnsRemaining, isBuff = C_PetBattles.GetAuraInfo(LE_BATTLE_PET_ENEMY, petIndex, auraIndex)
 		local id, name, icon, maxCooldown, unparsedDescription, numTurns, petType, noStrongWeakHints = C_PetBattles.GetAbilityInfoByID(auraID)
 		if name == auraName then  return true,turnsRemaining end
@@ -80,7 +80,7 @@ function MyPetBattle.currentWeather(weather)
 
 		if weather == currentWeather then return true end
 	end
-	return false		
+	return false
 end
 
 -- Check if a spell is strong against our current target
@@ -88,8 +88,8 @@ function MyPetBattle.abilityIsStrong(spell)
 	local activePetSlot = C_PetBattles.GetActivePet(LE_BATTLE_PET_ALLY)
 	local enemyPetSlot = C_PetBattles.GetActivePet(LE_BATTLE_PET_ENEMY)
 	local enemyType = C_PetBattles.GetPetType(LE_BATTLE_PET_ENEMY, enemyPetSlot)
-	-- Check if the spell is on the actionbar 
-	for i_=1,3 do 
+	-- Check if the spell is on the actionbar
+	for i_=1,3 do
 		local abilityName, abilityType, noHints
 		_, abilityName, _, _, _, _, abilityType, noHints = C_PetBattles.GetAbilityInfo(LE_BATTLE_PET_ALLY, activePetSlot, i_)
 		if spell == abilityName then
@@ -115,12 +115,12 @@ end
 -- Check if we can cast the spell
 function MyPetBattle.canCast(spell)
 	if spell == nil then  return false end
-	
+
 	local petOwner = LE_BATTLE_PET_ALLY
 	local activePetIndex = C_PetBattles.GetActivePet(LE_BATTLE_PET_ALLY)
 
-	-- Check if the spell is on the actionbar 
-	for i_=1,3 do 
+	-- Check if the spell is on the actionbar
+	for i_=1,3 do
 		local id, name, icon, maxCooldown, desc, numTurns, petType, noStrongWeakHints  = C_PetBattles.GetAbilityInfo(petOwner, activePetIndex, i_)
 		if spell == name then
 --			print("We have the spell on slot: ", i_)
@@ -160,9 +160,9 @@ end
 function MyPetBattle.parseSpellTable(petSpellTable)
 	local spell = nil
 	local conditions = nil
-	
+
 	for _, spellTable in pairs(petSpellTable) do
-		spell = spellTable[1] 
+		spell = spellTable[1]
 		conditions = spellTable[2]
 		-- Return spell if conditions are true and spell is castable.
 		if MyPetBattle.conditionsMatched(spell,conditions) and MyPetBattle.canCast(spell) then
@@ -175,12 +175,12 @@ end
 -- Check if the spell is on the actionbar and in which slot number (1-3)
 function MyPetBattle.getSpellSlotIndex(spell)
 	if spell == nil then  return false end
-	
+
 	local petOwner = LE_BATTLE_PET_ALLY
 	local activePetIndex = C_PetBattles.GetActivePet(LE_BATTLE_PET_ALLY)
 
-	-- Check if the spell is on the actionbar 
-	for i_=1,3 do 
+	-- Check if the spell is on the actionbar
+	for i_=1,3 do
 		local id, name, icon, maxCooldown, desc, numTurns, petType, noStrongWeakHints  = C_PetBattles.GetAbilityInfo(petOwner, activePetIndex, i_)
 		if spell == name then
 --			print("Spell slot index: ", i_)
@@ -269,9 +269,9 @@ function MyPetBattle.getCompareFunc(func,var,direction)
 	return function(a,b)
 		local avar = a[var]
 		local bvar = b[var]
-		if type(avar) == "boolean" then 
+		if type(avar) == "boolean" then
 			avar = avar and 1 or 0
-			bvar = bvar and 1 or 0 
+			bvar = bvar and 1 or 0
 		end
 
 		if avar == bvar and func then
@@ -318,7 +318,7 @@ function MyPetBattle.loopPets(handler)
 			local petIsSummonable = C_PetJournal.PetIsSummonable(pet.petID) -- Check if we can actually summon the pet e.g. alliance/horde only (also works for revoked)
 			if petIsSummonable then
 				pet.health, pet.maxHealth, pet.power, pet.speed, pet.rarity = C_PetJournal.GetPetStats(pet.petID)
-				
+
 				if pet.rarity >= rarity_end then
 					handler(pet)
 				end
@@ -369,7 +369,7 @@ function MyPetBattle.setTeam(avgLevel)
 
 	local petGUID = C_PetJournal.GetPetLoadOutInfo(1)
 	if not petGUID then
-		print("|cffff8000MPB|r: |cFFFF0033Not ready to set team!") 
+		print("|cffff8000MPB|r: |cFFFF0033Not ready to set team!")
 		return
 	end
 
@@ -377,26 +377,26 @@ function MyPetBattle.setTeam(avgLevel)
 	if type(avgLevel) == "string" then avgLevel = tonumber(avgLevel) end
 
 	-- Check if user has set a level for the team
-	if avgLevel == "" or avgLevel == nil then 
-		print("|cffff8000MPB|r: |cFFFF0033Please set a desired level for the team!") 
+	if avgLevel == "" or avgLevel == nil then
+		print("|cffff8000MPB|r: |cFFFF0033Please set a desired level for the team!")
 		return
 	end
 
 	-- Check level is not below 1 or above 25
-	if avgLevel < 1 or avgLevel > 25 then 
-		print("|cffff8000MPB|r: |cFFFF0033Level " .. avgLevel .. " is not valid, please set a level between 1-25!") 
+	if avgLevel < 1 or avgLevel > 25 then
+		print("|cffff8000MPB|r: |cFFFF0033Level " .. avgLevel .. " is not valid, please set a level between 1-25!")
 		return
 	end
 
 	-- Sort the pet journal
-	C_PetJournal.SetFlagFilter(LE_PET_JOURNAL_FLAG_COLLECTED, true) -- Pets you have collected
-	C_PetJournal.SetFlagFilter(LE_PET_JOURNAL_FLAG_FAVORITES, false) -- Pets you have set as favorites
-	C_PetJournal.SetFlagFilter(LE_PET_JOURNAL_FLAG_NOT_COLLECTED, false) -- Pets you have not collected
-	
-	-- Start to set the team	
+	--REMOVED C_PetJournal.SetFlagFilter(LE_PET_JOURNAL_FLAG_COLLECTED, true) -- Pets you have collected
+	--REMOVED C_PetJournal.SetFlagFilter(LE_PET_JOURNAL_FLAG_FAVORITES, false) -- Pets you have set as favorites
+	--REMOVED C_PetJournal.SetFlagFilter(LE_PET_JOURNAL_FLAG_NOT_COLLECTED, false) -- Pets you have not collected
+
+	-- Start to set the team
 
 	local pet_set = {false,false,false} -- slot 1 to 3: true if we successfully set the pet
-	
+
 	MyPetBattleVars.petList = {} -- For each slot, contains a sorted table of possible pets for each slot. the first pet is chosen for the slot.
 
 	-- LOAD HEALTH THRESHOLD FROM SAVED VARIABLES
@@ -450,7 +450,7 @@ function MyPetBattle.setTeam(avgLevel)
 
 		-- calculate the allowed level range
 		levelRange.start = MPB.MATCH_PET_LEVELS_START_LEVEL
-		
+
 		for _, suffix in pairs({"", "Enemy"}) do
 			if levelRange["step"..suffix] > 0 then
 				levelRange["lowest"..suffix] = levelRange["start"..suffix]
@@ -460,7 +460,7 @@ function MyPetBattle.setTeam(avgLevel)
 				levelRange["highest"..suffix] = levelRange["start"..suffix]
 			end
 		end
-		
+
 		-- populate the array that keeps count of the enemy pets
 		MyPetBattleVars.petLevelsEnemy = {}
 		for n_ = 1,25 do
@@ -497,17 +497,17 @@ function MyPetBattle.setTeam(avgLevel)
 				end
 			end
 		end
-		
+
 		if #MyPetBattleVars.neededLevels + #MyPetBattleVars.neededLevelsEnemy + #MyPetBattleVars.commonLevels > 3 then
 			print("|cffff8000MPB|r: |cFFFF0033There are too many locked pets on both teams! Unlock some pets.")
 			return
 		end
-		
+
 		local function HandleLockedPets(suffix, autoForfeit, numKeepOfLevel, useNonRare, failMessage)
 			--print ("HandleLockedPets", "suffix", suffix, "autoForfeit", autoForfeit, "numKeepOfLevel", numKeepOfLevel, "useNonRare", useNonRare, "sortMethod.value"..suffix, sortMethod["value"..suffix], "levelRange.step"..suffix, levelRange["step"..suffix])
 			--print('======================')
 			local sortFunction = GetSortFunction(nil, sortMethod["value"..suffix], levelRange["step"..suffix], "")
-			
+
 			for i_ = 1,#MyPetBattleVars["neededLevels"..suffix] do
 				local neededLevel = MyPetBattleVars["neededLevels"..suffix][i_]
 				MyPetBattleVars.petList["neededLevels" .. suffix .. i_] = {}
@@ -537,7 +537,7 @@ function MyPetBattle.setTeam(avgLevel)
 			end
 			return true
 		end
-		
+
 		-- remove neededLevels from the enemy list
 		if not HandleLockedPets("Enemy", enemyAutoForfeit, enemyNumKeepOfLevel, enemyUseNonRare,
 				"The enemy doesn't have a pet to match your team's locked pet level") then
@@ -555,7 +555,7 @@ function MyPetBattle.setTeam(avgLevel)
 		for _, suffix in pairs({enemyIsLeader and "" or "Enemy", enemyIsLeader and "Enemy" or ""}) do
 			sortFunction = GetSortFunction(sortFunction, sortMethod["value"..suffix], levelRange["step"..suffix], suffix)
 		end
-		
+
 		-- Choose our remaining slot levels and remove them from both lists.
 		-- As a last resort, try pets of level 25 since they won't gain a level anyway.
 		for i_ = #MyPetBattleVars.neededLevels + 1,3 do
@@ -583,7 +583,7 @@ function MyPetBattle.setTeam(avgLevel)
 			table.sort(MyPetBattleVars.petList["matchLevels" .. i_], sortFunction)
 			if #MyPetBattleVars.petList["matchLevels" .. i_] > 0 then
 				local pet = MyPetBattleVars.petList["matchLevels" .. i_][1]
-				
+
 				for _, suffix in pairs({"", "Enemy"}) do
 					local level = pet["level"..suffix]
 					local rarityGroup = pet["rarityGroup"..suffix]
@@ -612,7 +612,7 @@ function MyPetBattle.setTeam(avgLevel)
 		else
 			-- PET slot SETUP
 			-- Make sure we step in the right direction according to the saved variables in config
-		
+
 			if doMatchLevels then
 				matchCount = matchCount + 1
 				local pet
@@ -664,7 +664,7 @@ function MyPetBattle.setTeam(avgLevel)
 				local sortFunction = MyPetBattle.composeSortFunction(nil, "rarity",DESCENDING,MPB.RANDOMIZE and "random" or "speciesName",ASCENDING,"petID",ASCENDING)
 				sortFunction = GetSortFunction(sortFunction, sortMethod.value, levelRange["step"..s_], "")
 				table.sort(MyPetBattleVars.petList[s_], sortFunction)
-				-- Set found pet to pet slot	
+				-- Set found pet to pet slot
 				local petGUID = C_PetJournal.GetPetLoadOutInfo(s_)
 				local pet = MyPetBattleVars.petList[s_][1]
 				if pet.petID ~= petGUID then
@@ -672,7 +672,7 @@ function MyPetBattle.setTeam(avgLevel)
 				end
 				-- Save pet guid
 				MyPetBattleVars.used_petguids[pet.petID] = s_
-				
+
 				if not doMatchLevels then
 					-- we already did this above for doMatchLevels
 					MyPetBattleVars.petLevels[pet.level].t = MyPetBattleVars.petLevels[pet.level].t - 1
@@ -752,7 +752,7 @@ function MyPetBattle.shouldIHide()
     -- local hidefrom={"Underwater","Flying"}
     local hidefrom={"Underwater","Underground","Chew"}
     for k,v in pairs(hidefrom) do
-        t,d = MyPetBattle.debuff(v) 
+        t,d = MyPetBattle.debuff(v)
         if t == true then
             return true
         end
@@ -764,7 +764,7 @@ function MyPetBattle.sendPetList()
 	MyPetBattle.countPets()
 
 	-- output the message string; see "MyPetBattleMatchPos constants" above for the message layout
-	
+
 	MyPetBattleVars.petListPlayer = (
 		"m"
 		..((MyPetBattleVars.state == MyPetBattleState.RECEIVED_PET_LIST or
@@ -793,7 +793,7 @@ function MyPetBattle.sendPetList()
 			..((MyPetBattleVars.petLevels[n_].ur > 9) and 9 or MyPetBattleVars.petLevels[n_].ur)
 		)
 	end
-	
+
 	MyPetBattleVars.petListPlayer = MyPetBattleVars.petListPlayer .. (mypetbattle_join_pvp and "p" or ".")
 
 	SendAddonMessage("MPB", MyPetBattleVars.petListPlayer, "PARTY")
@@ -813,7 +813,7 @@ function MyPetBattle.sendPetLoadOut()
 	MyPetBattleVars.loadOut = "t"
 	for s_ = 1, 3 do
 		local petGUID = C_PetJournal.GetPetLoadOutInfo(s_)
-		local speciesID, _, level = C_PetJournal.GetPetInfoByPetID(petGUID) 
+		local speciesID, _, level = C_PetJournal.GetPetInfoByPetID(petGUID)
 		MyPetBattleVars.loadOut = MyPetBattleVars.loadOut .. (s_ == 1 and "" or ",") .. (speciesID or "") .. ":" .. (level or "")
 	end
 	SendAddonMessage("MPB", MyPetBattleVars.loadOut, "PARTY")
@@ -843,7 +843,7 @@ function MyPetBattle.checkMissingPets()
 		if canBattle then
 			local spell = nil
 			if petType == 1 then 		-- HUMANOID
-				spell = humanoid(speciesName)		
+				spell = humanoid(speciesName)
 			elseif petType == 2 then 	-- DRAGONKIN
 				spell = dragonkin(speciesName)
 			elseif petType == 3 then 	-- FLYING
@@ -863,12 +863,12 @@ function MyPetBattle.checkMissingPets()
 			elseif petType == 10 then 	-- MECHANICAL
 				spell = mechanical(speciesName)
 			end
-			
+
 			-- Print the pets we are missing rotations for
 			if spell == "UNKNOWN" then
 				print("Missing rotation for: \124T"..icon..":0\124t "..speciesName)
 			end
-		end	
+		end
 	end
 
 end

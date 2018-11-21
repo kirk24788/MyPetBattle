@@ -18,7 +18,7 @@ MPB_STATS_TABLE = {}
 MyPetBattleState = {}
 
 --[[
-Notes: 
+Notes:
 The _AGAIN states are repeated by the one second loop. They are started from the immediate one-time state of the same name.
 The flags cover a range of states.
 --]]
@@ -62,7 +62,7 @@ function MyPetBattle.setState(state, immediate)
 end
 --]
 
-	
+
 --[
 MyPetBattleMatchPos = {}
     -- match message character position constants:
@@ -88,7 +88,7 @@ MyPetBattleMatchPos = {}
                                                -- m...01 000025 01+3 111222333444555666777888999000111222333444555666777888999000111222333444555.
 --]
 
-RegisterAddonMessagePrefix("MPB")
+C_ChatInfo.RegisterAddonMessagePrefix("MPB")
 
 --------------------
 ---- SETUP DONE ----
@@ -114,29 +114,29 @@ function events:ADDON_LOADED(...)
 		if MPB_CONFIG_TEAMSETUP_RANDOM_TEAM_PET_HEALTH_THRESHOLD == nil then
 			MPB_CONFIG_TEAMSETUP_RANDOM_TEAM_PET_HEALTH_THRESHOLD = 0.80
 		end
-		
+
 		if MPB_CONFIG_TEAMSETUP_PET1_LEVEL_ADJUSTMENT == nil then
 			MPB_CONFIG_TEAMSETUP_PET1_LEVEL_ADJUSTMENT = -2
 		end
-		
+
 		if MPB_CONFIG_TEAMSETUP_PET2_LEVEL_ADJUSTMENT == nil then
 			MPB_CONFIG_TEAMSETUP_PET2_LEVEL_ADJUSTMENT = -2
 		end
-		
+
 		if MPB_CONFIG_TEAMSETUP_PET3_LEVEL_ADJUSTMENT == nil then
 			MPB_CONFIG_TEAMSETUP_PET3_LEVEL_ADJUSTMENT = 2
 		end
-		
+
 		-- PRE-COMBAT OPTIONS
 		if MPB_CONFIG_PRE_COMBAT_ATTEMPT_STRONGEST_RANDOM_TEAM == nil then
 			MPB_CONFIG_PRE_COMBAT_ATTEMPT_STRONGEST_RANDOM_TEAM = false
 		end
-		
+
 		-- COMBAT OPTIONS
 		if MPB_CONFIG_COMBAT_SWAP_PET_HEALTH_THRESHOLD == nil then
 			MPB_CONFIG_COMBAT_SWAP_PET_HEALTH_THRESHOLD = 0.35
 		end
-		
+
 		-- POST-COMBAT OPTIONS
 		if MPB_CONFIG_POST_COMBAT_USE_REVIVE_BATTLE_PETS_AFTER_COMBAT == nil then
 			MPB_CONFIG_POST_COMBAT_USE_REVIVE_BATTLE_PETS_AFTER_COMBAT = false
@@ -153,7 +153,7 @@ function events:ADDON_LOADED(...)
 		-- MISC OPTIONS
 		if MPB_CONFIG_MISC_AUTOMATIC_RELEASE_NON_RARES == nil then
 			MPB_CONFIG_MISC_AUTOMATIC_RELEASE_NON_RARES = false
-		end		
+		end
 
 		-- CAPTURE PETS OPTIONS
 		if MPB_CAPTURE_RARES == nil then
@@ -175,12 +175,12 @@ function events:ADDON_LOADED(...)
 		if MPB == nil then
 			MPB = {}
 		end
-		
+
 		if MPB.USE_NON_RARE == nil then
 			-- Set this to true if you want to allow using non-rare pets. Higher quality pets are still given priority for the same level.
 			MPB.USE_NON_RARE = false
 		end
-		
+
 		if MPB.SORT_METHOD == nil then
 			MPB.SORT_METHOD = MPB.PRIORITIZE_LEVEL and 1 or 0
 				-- 0: pets chosen first by rarity and second by level (within the selected allowable level range).
@@ -188,18 +188,18 @@ function events:ADDON_LOADED(...)
 				-- 2: pets chosen first by level and second by level difference and third by rarity.
 		end
 		MPB.PRIORITIZE_LEVEL = nil -- replaced by MPB.SORT_METHOD
-		
+
 		if MPB.RANDOMIZE == nil then
 			-- Set this to true if you want pets to be chosen randomly instead of name.
 			MPB.RANDOMIZE = false
 		end
-		
+
 		if MPB.KEEP_MINIMUM_NUM_OF_A_LEVEL == nil then
 			 -- This is a number between 0 and 9. The addon won't choose a pet of a level if you plan to win (are not forfeiting) if you only have this number of pets of that level.
 			 -- 0 means you don't care about keeping pets at each level. However, if you don't have pets at a level, then you can't win-trade with a player that only has pets at that level.
 			MPB.KEEP_MINIMUM_NUM_OF_A_LEVEL = 0
 		end
-		
+
 		if MPB.EQUIP_SAFARI_HAT == nil then
 			 -- If this is enabled, then the Safari Hat is equipped when the battle starts and is unequipped when the battle ends so you get bonus XP for your pets.
 			 -- If you have an heirloom helmet then you also get bonus XP for your character since the player XP is awarded after the Safari Hat is switched to the heirloom helmet.
@@ -213,7 +213,7 @@ function events:ADDON_LOADED(...)
 
 		--[
 			-- Note that the player that is not auto-forfeiting actually controls the following settings. If both players are not auto-forfeiting then the leader controls the settings.
-		
+
 			if MPB.MATCH_PET_LEVELS_START_LEVEL == nil then
 				-- The level that you want to start leveling pets from.
 				MPB.MATCH_PET_LEVELS_START_LEVEL = 24
@@ -228,7 +228,7 @@ function events:ADDON_LOADED(...)
 		---------------------------------------
 		-- SET UI ELEMENTS TO SAVEDVARIABLES --
 		-- TEAM SETUP
-		EditBox_min_team_pet_health:SetText(tostring(MPB_CONFIG_TEAMSETUP_RANDOM_TEAM_PET_HEALTH_THRESHOLD * 100)) 
+		EditBox_min_team_pet_health:SetText(tostring(MPB_CONFIG_TEAMSETUP_RANDOM_TEAM_PET_HEALTH_THRESHOLD * 100))
 		Slider_pet1_level:SetValue(MPB_CONFIG_TEAMSETUP_PET1_LEVEL_ADJUSTMENT)
 		Slider_pet2_level:SetValue(MPB_CONFIG_TEAMSETUP_PET2_LEVEL_ADJUSTMENT)
 		Slider_pet3_level:SetValue(MPB_CONFIG_TEAMSETUP_PET3_LEVEL_ADJUSTMENT)
@@ -236,11 +236,11 @@ function events:ADDON_LOADED(...)
 		DropDownSortMethod_Init(DropDownSortMethod)
 		CheckButtonRandomize:SetChecked(MPB.RANDOMIZE)
 		EditBoxLevelKeepMinimum:SetText(MPB.KEEP_MINIMUM_NUM_OF_A_LEVEL)
-	
+
 		-- PRE-COMBAT
 		CheckButton15:SetChecked(MPB_CONFIG_PRE_COMBAT_ATTEMPT_STRONGEST_RANDOM_TEAM)
 		-- COMBAT
-		EditBox_swap_pet_health_threshold:SetText(tostring(MPB_CONFIG_COMBAT_SWAP_PET_HEALTH_THRESHOLD * 100)) 
+		EditBox_swap_pet_health_threshold:SetText(tostring(MPB_CONFIG_COMBAT_SWAP_PET_HEALTH_THRESHOLD * 100))
 		CheckButtonEquipSafariHat:SetChecked(MPB.EQUIP_SAFARI_HAT)
 
 		-- POST-COMBAT
@@ -248,12 +248,12 @@ function events:ADDON_LOADED(...)
 		CheckButton14:SetChecked(MPB_CONFIG_POST_COMBAT_USE_BATTLE_PET_BANDAGE_AFTER_COMBAT)
 		CheckButton11:SetChecked(MPB_CONFIG_POST_COMBAT_AUTOMATIC_NEW_RANDOM_TEAM_AFTER_COMBAT)
 
-		-- MISC	
+		-- MISC
 		CheckButton13:SetChecked(MPB_CONFIG_MISC_AUTOMATIC_RELEASE_NON_RARES)
 
 		-- LOAD LAST USED DESIRED_PET_LEVEL FOR THE RANDOM TEAM GENERATION
 		local loadLastUsedDesiredPetLevel = MPB_EDITBOX_DESIRED_PET_LEVEL
-		EditBox_PetLevel:SetText(loadLastUsedDesiredPetLevel) 
+		EditBox_PetLevel:SetText(loadLastUsedDesiredPetLevel)
 
 		-- LOCK PETS FOR RANDOM TEAM GENERATION
 		Check_lock_pet_1:SetChecked(MPB_LOCK_PET1)
@@ -275,7 +275,7 @@ function events:ADDON_LOADED(...)
 		CheckButton_wt_match_levels:SetChecked(MPB.MATCH_PET_LEVELS_DURING_WT)
 		EditBox_MatchLevel:SetText(MPB.MATCH_PET_LEVELS_START_LEVEL)
 		EditBox_Direction:SetText((MPB.MATCH_PET_LEVELS_LEVEL_STEP > 0) and "+1" or "-1")
-		
+
 		-- CALL FUNCTION IN Frame.lua TO UPDATE THE POSITION OF THE MINIMAP BUTTON
 		MPB_MMButton_UpdatePosition()
 
@@ -290,18 +290,18 @@ function events:ADDON_LOADED(...)
 
 end
 
-function events:PLAYER_LOGIN(...)				-- 
+function events:PLAYER_LOGIN(...)				--
 --	print("PLAYER_LOGIN")
 	print("\124cFFFF9933My Pet Battle ready for action")
 	-- Set default text of textfield "PetLevel" for random team generation
 end
 
-function events:PLAYER_ENTERING_WORLD(...)				-- 
-	-- mypetbattle_debug = true
+function events:PLAYER_ENTERING_WORLD(...)				--
+	mypetbattle_debug = true
 	if mypetbattle_debug then print("PLAYER_ENTERING_WORLD", ...) end
 end
 
-function events:PET_BATTLE_ABILITY_CHANGED(...)				-- 
+function events:PET_BATTLE_ABILITY_CHANGED(...)				--
 --	print("PET_BATTLE_ABILITY_CHANGED")
 end
 function events:PET_BATTLE_ACTION_SELECTED(...)				-- Player selected a pet action
@@ -310,13 +310,13 @@ end
 function events:PET_BATTLE_AURA_APPLIED(...)				-- Aura applied e.g. Adrenaline for 3 turn (3 stacks)
 --	print("PET_BATTLE_AURA_APPLIED")
 end
-function events:PET_BATTLE_AURA_CANCELED(...)				-- 
+function events:PET_BATTLE_AURA_CANCELED(...)				--
 --	print("PET_BATTLE_AURA_CANCELED")
 end
 function events:PET_BATTLE_AURA_CHANGED(...)				-- Aura changed e.g. Adrenaline changed to 2 stacks
 --	print("PET_BATTLE_AURA_CHANGED")
 end
-function events:PET_BATTLE_CAPTURED(...)					-- 
+function events:PET_BATTLE_CAPTURED(...)					--
 --	print("PET_BATTLE_CAPTURED")
 --	print(...)
 	local petOwner, petIndex = ...
@@ -332,14 +332,14 @@ function events:PET_BATTLE_CAPTURED(...)					--
 		MyPetBattle.addStats(speciesName,1)
 	end
 end
-function events:PET_BATTLE_CLOSE(...)						-- 
+function events:PET_BATTLE_CLOSE(...)						--
 	if mypetbattle_debug then print("PET_BATTLE_CLOSE", ...) end
 	if MyPetBattleState.FLAG_BATTLE_IN_PROGRESS then -- don't want to do this twice so check this flag
 		MyPetBattle.setState(MyPetBattleState.BATTLE_CLOSED, true)
 	end
 end
 
-function events:PET_BATTLE_FINAL_ROUND(...)					-- 
+function events:PET_BATTLE_FINAL_ROUND(...)					--
 	if mypetbattle_debug then print("PET_BATTLE_FINAL_ROUND", ...) end
 	if mypetbattle_debug then
 		-- SHOWS THE SAME RESULT ALL THE TIME FOR PVP BATTLES REGARDLESS OF WHO WINS?!?!
@@ -358,7 +358,7 @@ function events:PET_BATTLE_FINAL_ROUND(...)					--
 	end
 end
 
-function events:PET_BATTLE_HEALTH_CHANGED(...)				-- 
+function events:PET_BATTLE_HEALTH_CHANGED(...)				--
 	-- petOwner, petIndex, healthChange
 --	local myOutput1, myOutput2, myOutput3 = ...;
 --	print("OUTPUT: " .. myOutput1 .. ", " .. myOutput2 .. ", " .. myOutput3)
@@ -370,7 +370,7 @@ function events:PET_BATTLE_HEALTH_CHANGED(...)				--
 	local pet_currentHealth = C_PetBattles.GetHealth(petOwner, petIndex)
 	local pet_maxHealth = C_PetBattles.GetMaxHealth(petOwner, petIndex)
 	local pet_healthPercentage = pet_currentHealth / pet_maxHealth * 100
-	
+
 	local textColor
 	if pet_healthPercentage < 30 then
 		textColor = "\124cFFFF0000" -- red
@@ -379,24 +379,24 @@ function events:PET_BATTLE_HEALTH_CHANGED(...)				--
 	elseif pet_healthPercentage <= 100 then
 		textColor = "\124cFF00FF00" -- green
 	end
-	
+
 	local textPetOwner
 	if petOwner == 1 then
 		textPetOwner = "Player: "
 	else
 		textPetOwner = "Enemy: "
 	end
-    if mypetbattle_debug then	
-	    if healthChange > 0 then 
-    --		print("gained " .. healthChange .. " health") 
-		    print(textPetOwner.."\124T"..pet_icon..":0\124t |cFF0066FF[" .. pet_name .. "]|r gained \124cFF00FF00" .. healthChange .. "\124r health. Current health: " .. textColor .. pet_currentHealth .. "/" .. pet_maxHealth .. string.format(" (%2.0f%%)", pet_healthPercentage)) 
+    if mypetbattle_debug then
+	    if healthChange > 0 then
+    --		print("gained " .. healthChange .. " health")
+		    print(textPetOwner.."\124T"..pet_icon..":0\124t |cFF0066FF[" .. pet_name .. "]|r gained \124cFF00FF00" .. healthChange .. "\124r health. Current health: " .. textColor .. pet_currentHealth .. "/" .. pet_maxHealth .. string.format(" (%2.0f%%)", pet_healthPercentage))
 	    elseif healthChange < 0 then
-    --		print("lost " .. abs(healthChange) .. " health") 
-		    print(textPetOwner.."\124T"..pet_icon..":0\124t |cFF0066FF[" .. pet_name .. "]|r lost \124cFFFF0000" .. abs(healthChange) .. "\124r health. Current health: " .. textColor .. pet_currentHealth .. "/" .. pet_maxHealth .. string.format(" (%2.0f%%)", pet_healthPercentage)) 
+    --		print("lost " .. abs(healthChange) .. " health")
+		    print(textPetOwner.."\124T"..pet_icon..":0\124t |cFF0066FF[" .. pet_name .. "]|r lost \124cFFFF0000" .. abs(healthChange) .. "\124r health. Current health: " .. textColor .. pet_currentHealth .. "/" .. pet_maxHealth .. string.format(" (%2.0f%%)", pet_healthPercentage))
 	    end
     end
-	
---	print(textPetOwner.."\124T"..pet_icon..":0\124t |cFF0066FF[" .. pet_name .. "]|r current health: " .. textColor .. pet_currentHealth .. "/" .. pet_maxHealth .. string.format(" (%2.0f%%)", pet_healthPercentage) .. " point") 
+
+--	print(textPetOwner.."\124T"..pet_icon..":0\124t |cFF0066FF[" .. pet_name .. "]|r current health: " .. textColor .. pet_currentHealth .. "/" .. pet_maxHealth .. string.format(" (%2.0f%%)", pet_healthPercentage) .. " point")
 
 --	print("Pet number "..petIndex .. " health is: " .. C_PetBattles.GetHealth(petOwner, petIndex))
 
@@ -404,17 +404,17 @@ function events:PET_BATTLE_HEALTH_CHANGED(...)				--
 	currentPet_Health = C_PetBattles.GetHealth(LE_BATTLE_PET_ALLY, currentPetID)
 	currentPet_MAX_Health = C_PetBattles.GetMaxHealth(LE_BATTLE_PET_ALLY, currentPetID)
 	currentPet_Health_percentage = currentPet_Health / currentPet_MAX_Health * 100
-	
+
 --	currentPetID = C_PetBattles.GetActivePet(LE_BATTLE_PET_ALLY)
 --	currentPet_Health = C_PetBattles.GetHealth(LE_BATTLE_PET_ALLY, currentPetID)
 --	currentPet_MAX_Health = C_PetBattles.GetMaxHealth(LE_BATTLE_PET_ALLY, currentPetID)
 --	currentPet_Health_percentage = currentPet_Health / currentPet_MAX_Health * 100
-	
-	
+
+
 --	print("|cff00ff00 Current pets health: " .. currentPet_Health .. "/" .. currentPet_MAX_Health .. string.format(" (%2.0f%%)", currentPet_Health_percentage) .. " points")
 end
 
-function events:PET_BATTLE_LEVEL_CHANGED(...)				-- 
+function events:PET_BATTLE_LEVEL_CHANGED(...)				--
 	if mypetbattle_debug then print("PET_BATTLE_LEVEL_CHANGED", ...) end
 	local petOwner, petIndex, newLevel = ...
 	if petOwner == LE_BATTLE_PET_ALLY then
@@ -422,16 +422,16 @@ function events:PET_BATTLE_LEVEL_CHANGED(...)				--
 		local pet_icon = C_PetBattles.GetIcon(petOwner, petIndex)
 		local pet_level = C_PetBattles.GetLevel(petOwner, petIndex)
 		MyPetBattle.setPetLevel(petIndex, newLevel, pet_level)
-		print("|cffff8000MPB|r: |cFF0066FF\124T"..pet_icon..":16\124t [" .. pet_name .. "]\124r is now level: " .. pet_level .."!") 
+		print("|cffff8000MPB|r: |cFF0066FF\124T"..pet_icon..":16\124t [" .. pet_name .. "]\124r is now level: " .. pet_level .."!")
 	end
 end
 
-function events:PET_BATTLE_LOOT_RECEIVED(...)				-- 
+function events:PET_BATTLE_LOOT_RECEIVED(...)				--
 --	print("PET_BATTLE_LOOT_RECEIVED")
 
 	local typeIdentifier, itemLink, quantity = ...;
 	print("|cffff8000MPB|r: \124cFF00FF00Item won:\124r " .. quantity .. " x " .. itemLink)
-	
+
 	if ( typeIdentifier == "item" ) then
 		local itemName, itemLink, _, _, _, _, _, _, _, itemIcon, _ = GetItemInfo(itemLink);
 --		local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, itemSellPrice = GetItemInfo(itemLink);
@@ -452,22 +452,22 @@ function MyPetBattle.addStats(key,value)
 	-- Pets fought
 	-- PvP win/loose, streak
 	-- XP from WT and other
-	if MPB_STATS_TABLE[key] ~= nil then 
+	if MPB_STATS_TABLE[key] ~= nil then
 		MPB_STATS_TABLE[key] = MPB_STATS_TABLE[key] + value
 	else
 		MPB_STATS_TABLE[key] = value
-	end	
+	end
 end
 
 function MyPetBattle.printStats()
 	-- PRINT STATISTICS OF OUR BATTLES
 	print("|cffff8000MPB|r: |cffff8000MPB stats for current session:|r")
-	for key,value in pairs(MPB_STATS_TABLE) do 
-		print(" - "..value.."x",key) 
+	for key,value in pairs(MPB_STATS_TABLE) do
+		print(" - "..value.."x",key)
 	end
 end
 
-function events:PET_BATTLE_MAX_HEALTH_CHANGED(...)			-- 
+function events:PET_BATTLE_MAX_HEALTH_CHANGED(...)			--
 --	print("PET_BATTLE_MAX_HEALTH_CHANGED")
 end
 
@@ -477,7 +477,7 @@ function events:PET_BATTLE_OPENING_DONE(...)				-- OPENING DONE AND READY TO BAT
 	MyPetBattle.setState(MyPetBattleState.BATTLE_OPENED, true)
 end
 
-function events:PET_BATTLE_OPENING_START(...)				-- 
+function events:PET_BATTLE_OPENING_START(...)				--
 	if mypetbattle_debug then print("PET_BATTLE_OPENING_START", ...) end
 	print("|cffff8000MPB|r: |cFF00FFFFGame Starting!")
 
@@ -502,7 +502,7 @@ end
 
 function events:PET_BATTLE_OVER(...)						-- Pet battle over (someone won)
 	if mypetbattle_debug then print("PET_BATTLE_OVER", ...) end
-	
+
 	-- Get pet names
 	pet1_name, pet1_speciesName = C_PetBattles.GetName(1, 1)
 	pet2_name, pet2_speciesName = C_PetBattles.GetName(1, 2)
@@ -513,7 +513,7 @@ function events:PET_BATTLE_OVER(...)						-- Pet battle over (someone won)
 	pet2_icon = C_PetBattles.GetIcon(1, 2)
 	pet3_icon = C_PetBattles.GetIcon(1, 3)
 
---[[	
+--[[
 	-- Get xp after combat has ended
 	pet1_xp_end, pet1_maxXp_end = C_PetBattles.GetXP(1, 1)
 	pet2_xp_end, pet2_maxXp_end = C_PetBattles.GetXP(1, 2)
@@ -529,12 +529,12 @@ function events:PET_BATTLE_OVER(...)						-- Pet battle over (someone won)
 	if pet1_xp_gained > 0 then print("|cffff8000MPB|r: |cFF0066FF\124T"..pet1_icon..":0\124t [" .. pet1_name .. "] |cFFFFFFFFgained " .. pet1_xp_gained .. " xp") end
 	if pet2_xp_gained > 0 then print("|cffff8000MPB|r: |cFF0066FF\124T"..pet2_icon..":0\124t [" .. pet2_name .. "] |cFFFFFFFFgained " .. pet2_xp_gained .. " xp") end
 	if pet3_xp_gained > 0 then print("|cffff8000MPB|r: |cFF0066FF\124T"..pet3_icon..":0\124t [" .. pet3_name .. "] |cFFFFFFFFgained " .. pet3_xp_gained .. " xp") end
-	
+
 	print("|cffff8000MPB|r: |cFF00FFFFGame Over!")
 end
 
 local needFirstSetTeam = true
-function events:UPDATE_SUMMONPETS_ACTION(...)					-- 
+function events:UPDATE_SUMMONPETS_ACTION(...)					--
 	if mypetbattle_debug then print("UPDATE_SUMMONPETS_ACTION", ...) end
 	-- After battle, only one team gets this event so it's not useful if you want for each battle a random team or a team that matches the levels of the enemy team.
 	-- The event occurs at startup after the PetJournal is properly loaded.
@@ -544,7 +544,7 @@ function events:UPDATE_SUMMONPETS_ACTION(...)					--
 	end
 end
 
-function events:COMPANION_UPDATE(...)					-- 
+function events:COMPANION_UPDATE(...)					--
 --	print("COMPANION_UPDATE")
 end
 
@@ -552,17 +552,17 @@ function events:PET_JOURNAL_LIST_UPDATE(...)
 --	print(PET_JOURNAL_LIST_UPDATE)
 end
 
-function events:PET_BATTLE_PET_CHANGED(...)					-- 
+function events:PET_BATTLE_PET_CHANGED(...)					--
 --	print("PET_BATTLE_PET_CHANGED")
 end
 
-function events:PET_BATTLE_PET_ROUND_PLAYBACK_COMPLETE(...)	-- 
+function events:PET_BATTLE_PET_ROUND_PLAYBACK_COMPLETE(...)	--
 	if mypetbattle_debug then print("PET_BATTLE_PET_ROUND_PLAYBACK_COMPLETE", ...) end
 	local round = ...
 	local roundstring = "|cffff8000MPB|r: Round " .. (round + 1) .. " - "
-	
+
 	local doMyPetBattle = mypetbattle_enabled -- or (mypetbattle_wintrade_enabled and round <= math.random(0,2)) -- ATTACK A RANDOM NUMBER OF TIMES BETWEEN 1-3 IF WE ARE DOING WT (0 AND 2 SINCE ROUND 0 EXISTS)
-	
+
 	if doMyPetBattle then
 		-------------------------------------
 		-- AUTO-SELECT FIRST AVAILABLE PET --
@@ -603,7 +603,7 @@ function events:PET_BATTLE_PET_ROUND_PLAYBACK_COMPLETE(...)	--
 	if doMyPetBattle then
 		-----------------------------------------------------------------------------------------
 		-- SKIP TURN IF POLYMORPHED, STUNNED ETC. BY ENEMY (MAYBE CHANGE PET IF LOW ON HEALTH) --
-		if MyPetBattle.buff("Polymorphed") or MyPetBattle.buff("Asleep") or MyPetBattle.buff("Crystal Prison") or MyPetBattle.buff("Stunned") or MyPetBattle.buff("Drowsy") then 
+		if MyPetBattle.buff("Polymorphed") or MyPetBattle.buff("Asleep") or MyPetBattle.buff("Crystal Prison") or MyPetBattle.buff("Stunned") or MyPetBattle.buff("Drowsy") then
 			C_PetBattles.SkipTurn()
 			return
 		end
@@ -653,12 +653,12 @@ function events:PET_BATTLE_PET_ROUND_PLAYBACK_COMPLETE(...)	--
 			end
 		end
 	end
-	
+
 	-----------------------------
 	-- GETTING READY TO ATTACK --
 	local spell = nil
 	if petType == 1 then 		-- HUMANOID
-		spell = humanoid()		
+		spell = humanoid()
 	elseif petType == 2 then 	-- DRAGONKIN
 		spell = dragonkin()
 	elseif petType == 3 then 	-- FLYING
@@ -681,14 +681,14 @@ function events:PET_BATTLE_PET_ROUND_PLAYBACK_COMPLETE(...)	--
 
 	local actionIndex = MyPetBattle.getSpellSlotIndex(spell)
 	local spellID, spellName, spellIcon, _, _, _, _, _ = C_PetBattles.GetAbilityInfo(petOwner, petIndex, actionIndex)
-				
+
 	if doMyPetBattle then
 		----------------------------------------------
 		-- IF WE HAVE SPELL WE CAN CAST, THEN CAST! --
-		if spell ~= nil and spell ~= "UNKNOWN" then	
+		if spell ~= nil and spell ~= "UNKNOWN" then
 			print(roundstring .. "|cffFF4500Casting\124r \124T"..spellIcon..":0\124t \124cff4e96f7\124HbattlePetAbil:"..spellID..":0:0:0\124h["..spell.."]\124h\124r");
 --			print("actionIndex: ", actionIndex)
-			C_PetBattles.UseAbility(actionIndex) -- USE PET ABILITY 
+			C_PetBattles.UseAbility(actionIndex) -- USE PET ABILITY
 		-- IF THE PET IS UNKNOWN, THEN CAST THE FIRST AVAILABLE SPELL SO WE WILL AT LEAST ATTACK
 		elseif spell == "UNKNOWN" then
 			print(roundstring .. "|cffFF4500Pet is unknown, casting first spell available")
@@ -701,7 +701,7 @@ function events:PET_BATTLE_PET_ROUND_PLAYBACK_COMPLETE(...)	--
 	end
 end
 
-function events:PET_BATTLE_PET_ROUND_RESULTS(...)			-- 
+function events:PET_BATTLE_PET_ROUND_RESULTS(...)			--
 --	print("PET_BATTLE_PET_ROUND_RESULTS")
 	local roundNumber = ...
 	if roundNumber ~= 0 and mypetbattle_debug then
@@ -709,25 +709,25 @@ function events:PET_BATTLE_PET_ROUND_RESULTS(...)			--
 	end
 end
 
-function events:PET_BATTLE_PVP_DUEL_REQUESTED(...)			-- 
+function events:PET_BATTLE_PVP_DUEL_REQUESTED(...)			--
 	print("PET_BATTLE_PVP_DUEL_REQUESTED")
 end
 
-function events:PET_BATTLE_PVP_DUEL_REQUEST_CANCEL(...)		-- 
+function events:PET_BATTLE_PVP_DUEL_REQUEST_CANCEL(...)		--
 	print("PET_BATTLE_PVP_DUEL_REQUEST_CANCEL")
 end
 
-function events:PET_BATTLE_QUEUE_PROPOSAL_ACCEPTED(...)		-- 
+function events:PET_BATTLE_QUEUE_PROPOSAL_ACCEPTED(...)		--
 	if mypetbattle_debug then print("PET_BATTLE_QUEUE_PROPOSAL_ACCEPTED", ...) end
 	print("|cffff8000MPB|r: Pet Battle PvP match accepted")
 end
 
-function events:PET_BATTLE_QUEUE_PROPOSAL_DECLINED(...)		-- 
+function events:PET_BATTLE_QUEUE_PROPOSAL_DECLINED(...)		--
 	if mypetbattle_debug then print("PET_BATTLE_QUEUE_PROPOSAL_DECLINED", ...) end
 	print("|cffff8000MPB|r: Removed from pet battle PvP queue")
 end
 
-function events:PET_BATTLE_QUEUE_PROPOSE_MATCH(...)			-- 
+function events:PET_BATTLE_QUEUE_PROPOSE_MATCH(...)			--
 	if mypetbattle_debug then print("PET_BATTLE_QUEUE_PROPOSE_MATCH", ...) end
 
 	-- Sync setup for wt
@@ -736,23 +736,23 @@ function events:PET_BATTLE_QUEUE_PROPOSE_MATCH(...)			--
 		if mypetbattle_debug then print("|cffff8000MPB|r: Queue popped, sending sync message! " .. MPB_SyncTimeSent) end
 		SendAddonMessage("MPB", "s"..MPB_SyncTimeSent, "PARTY")
 	end
-	
-	-- Automatic accept PvP queue popup if enabled	
+
+	-- Automatic accept PvP queue popup if enabled
 	if (mypetbattle_join_pvp and not mypetbattle_wintrade_enabled) then
 		print("|cffff8000MPB|r: Auto-accepting pet PvP match!")
 		C_PetBattles.AcceptQueuedPVPMatch()
 	end
 end
 
-function events:PET_BATTLE_QUEUE_STATUS(...)				-- 
+function events:PET_BATTLE_QUEUE_STATUS(...)				--
 --	print("PET_BATTLE_QUEUE_STATUS")
 end
 
-function events:PET_BATTLE_TURN_STARTED(...)				-- 
-	print("PET_BATTLE_TURN_STARTED")
+function events:PET_BATTLE_OPENING_DONE(...)				--
+	print("PET_BATTLE_OPENING_DONE")
 end
 
-function events:PET_BATTLE_XP_CHANGED(...)					-- 
+function events:PET_BATTLE_XP_CHANGED(...)					--
 	if mypetbattle_debug then print("PET_BATTLE_XP_CHANGED", ...) end
 
 	local petOwner, petIndex, xpGained = ...
@@ -821,7 +821,7 @@ function events:CHAT_MSG_COMBAT_XP_GAIN(...)
 	end
 end
 
-function events:CHAT_MSG_ADDON(...)							-- 
+function events:CHAT_MSG_ADDON(...)							--
 --	print("CHAT_MSG_ADDON", ...)
 	local prefix, message, channel, sender = ...
 	-- CHECK IF MESSAGE COMES FROM MPB ADDON
@@ -862,7 +862,7 @@ end);
 
 -- REGISTER ALL EVENTS FOR WHICH HANDLERS HAVE BEEN DEFINED
 for k, v in pairs(events) do
- mypetbattle_frame:RegisterEvent(k); 
+ mypetbattle_frame:RegisterEvent(k);
 end
 
 --------------------
@@ -908,7 +908,7 @@ MPB_onUpdate = function (self,elapsed)
 	if MPB_timerSetTeamCountdown > 0 then
 		MPB_timerSetTeamCountdown = MPB_timerSetTeamCountdown - elapsed
 	end
-	
+
 	-- check states
 	if MyPetBattleVars.state == MyPetBattleState.SET_TEAM_START then
 		if mypetbattle_debug then print("MyPetBattleState.SET_TEAM_START") end
@@ -943,7 +943,7 @@ MPB_onUpdate = function (self,elapsed)
 	if MyPetBattleVars.state == MyPetBattleState.RECEIVED_PET_LIST then
 		if mypetbattle_debug then print("MyPetBattleState.RECEIVED_PET_LIST") end
 		MPB_timerSetTeamCountdown = MPB_timerSetTeamInterval
-		
+
 		if not mypetbattle_join_pvp then
 			if string.sub(MyPetBattleVars.petListEnemy,MyPetBattleMatchPos.JOIN_PVP,MyPetBattleMatchPos.JOIN_PVP) == "p" then
 				mypetbattle_join_pvp = true
@@ -975,7 +975,7 @@ MPB_onUpdate = function (self,elapsed)
 		-- Save desired pet level for next time we log in
 		MPB_EDITBOX_DESIRED_PET_LEVEL = desiredPetLevel
 		-- Clear focus from the editbox
-		EditBox_PetLevel:ClearFocus()                       
+		EditBox_PetLevel:ClearFocus()
 		local petGUID = C_PetJournal.GetPetLoadOutInfo(1)
 		if not petGUID then
 			MyPetBattle.setState(MyPetBattleState.SET_TEAM_AGAIN, false)
@@ -1004,10 +1004,10 @@ MPB_onUpdate = function (self,elapsed)
 			MyPetBattleVars.currentEquippedHelmLink = GetInventoryItemLink("player", headSlotId)
 			EquipItemByName(92738)
 		end
-		
+
 		print("|cffff8000MPB|r: We have to fight " .. C_PetBattles.GetNumPets(LE_BATTLE_PET_ENEMY) .. " enemy pets")
 		-- Auto-select first available pet
-		
+
 		if mypetbattle_enabled or mypetbattle_wintrade_enabled then
 			calculatePetLoadOutEnemy()
 			if mypetbattle_wintrade_enabled and MyPetBattleVars.loadOutEnemyCurrent ~= MyPetBattleVars.loadOutEnemy then
@@ -1025,7 +1025,7 @@ MPB_onUpdate = function (self,elapsed)
 		end
 
 		MPB_timerTotal = 0 -- Reset timer for automatic forfeit
-		
+
 		MyPetBattle.setState(MyPetBattleState.BATTLE_IN_PROGRESS, false)
 		MyPetBattleState.FLAG_ALLOW_FORFEIT = true
 	end
@@ -1057,7 +1057,7 @@ MPB_onUpdate = function (self,elapsed)
 				EquipItemByName(MyPetBattleVars.currentEquippedHelmLink)
 			end
 		end
-		
+
 		MyPetBattle.setState(MyPetBattleState.BATTLE_CLOSED_IN_PROGRESS, false)
 		if ( StopwatchFrame:IsShown() ) then
 			StopwatchFrame:Hide();
@@ -1085,7 +1085,7 @@ MPB_onUpdate = function (self,elapsed)
 	if MPB_timerSetTeamCountdown <= 0 then
 		if MyPetBattleVars.state == MyPetBattleState.TRANSFER_PET_LIST_AGAIN or MyPetBattleVars.state == MyPetBattleState.RECEIVED_PET_LIST_AGAIN then
 			if mypetbattle_debug then print(MyPetBattleVars.state == MyPetBattleState.TRANSFER_PET_LIST_AGAIN and "MyPetBattleState.TRANSFER_PET_LIST_AGAIN" or "MyPetBattleState.RECEIVED_PET_LIST_AGAIN") end
-		
+
 			if mypetbattle_wintrade_enabled and MPB.MATCH_PET_LEVELS_DURING_WT then
 				MPB_timerSetTeamCountdown = MPB_timerSetTeamInterval
 				MyPetBattle.sendPetList()
@@ -1127,15 +1127,15 @@ MPB_onUpdate = function (self,elapsed)
 			local petGUID = C_PetJournal.GetPetLoadOutInfo(i_)
 			if not petGUID then  break end -- BREAK THE LOOP IF THERE ARE NO PETS YET OR WE WILL GET AN ERROR
 
-			local speciesID, customName, level, xp, maxXp, displayID, isFavorite, name, icon, petType, creatureID, sourceText, description, isWild, canBattle, tradable, unique, obtainable = C_PetJournal.GetPetInfoByPetID(petGUID) 
+			local speciesID, customName, level, xp, maxXp, displayID, isFavorite, name, icon, petType, creatureID, sourceText, description, isWild, canBattle, tradable, unique, obtainable = C_PetJournal.GetPetInfoByPetID(petGUID)
 			level = MyPetBattle.getPetLevel("MPB_onUpdate", petGUID, level)
 
 			if MPB_petguids[i_] ~= petGUID then -- CHECK IF WE ALREADY HAVE THE PET, THEN NO NEED TO SET THE TEXTURE
 				MPB_petguids[i_] = petGUID
 				-- SET PET UI TEXTURE
-				_G["Pet".. i_ .."_texture"]:SetTexture(icon) 
+				_G["Pet".. i_ .."_texture"]:SetTexture(icon)
 			end
-			
+
 			if level ~= tonumber(_G["Pet".. i_ .."_level_string"]:GetText()) then
 				_G["Pet".. i_ .."_level_string"]:SetText(level)
 			end
@@ -1161,7 +1161,7 @@ MPB_onUpdate = function (self,elapsed)
 			if mypetbattle_debug then print("Sync difference is: "..syncDifference) end		-- FOR DEBUGGING
 
 			-- IF SYNC RECEIVED AND WITHING THRESHOLD, THEN ACCEPT
-			if syncDifference < syncThreshold then 
+			if syncDifference < syncThreshold then
 				if MPB_timerAcceptPVPMatchmakingCountdown <= 0 then
 					print("|cffff8000MPB|r: Sync is ok, accepting battle")
 					C_PetBattles.AcceptQueuedPVPMatch()
@@ -1172,7 +1172,7 @@ MPB_onUpdate = function (self,elapsed)
 					MPB_timerStartPVPMatchingCountdown = MPB_timerStartPVPMatchingInterval
 				end
 			-- COUNT syncThreshold SECONDS BEFORE DECLINING
-			elseif MPB_syncCounter >= syncThreshold then 
+			elseif MPB_syncCounter >= syncThreshold then
 				print("|cffff8000MPB|r: Not in sync, declining battle")
 				C_PetBattles.DeclineQueuedPVPMatch()
 				MPB_timerStartPVPMatchingCountdown = MPB_timerStartPVPMatchingAfterDeclineQueuedPVPMatch
@@ -1187,7 +1187,7 @@ MPB_onUpdate = function (self,elapsed)
 	end
 
 end
- 
+
 local f = CreateFrame("frame")
 f:SetScript("OnUpdate", MPB_onUpdate)
 
@@ -1203,14 +1203,14 @@ function SlashCmdList.MYPETBATTLE(msg, editbox)
 		CheckButton1:SetChecked(mypetbattle_enabled)
 	elseif msg == "join_pvp" then
 		mypetbattle_join_pvp = not mypetbattle_join_pvp
-		if mypetbattle_join_pvp then 
+		if mypetbattle_join_pvp then
 			status = "\124cFF00FF00PvP enabled"
 			if mypetbattle_wintrade_enabled and MPB.MATCH_PET_LEVELS_DURING_WT and not MyPetBattleState.FLAG_SET_TEAM_IN_PROGRESS then
 				MyPetBattle.setState(MyPetBattleState.SET_TEAM_START, true)
 			else
 				-- Our timer will call StartPVPMatchmaking
 			end
-		else 
+		else
 			status = "\124cFFFF0000PvP disabled"
 			if C_PetBattles.GetPVPMatchmakingInfo() == "queued" then
 				MPB_timerStartPVPMatchingCountdown = MPB_timerStartPVPMatchingAfterStopPVPMatching
